@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+Packages
+```{r setup}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+```
+
+
+Import
+```{r}
+number_of_deaths_by_risk_factor <- read_csv("number-of-deaths-by-risk-factor.csv") %>% filter(grepl('U', Code))
+
+number_of_deaths_by_risk_factor
+
+```
+
+Clean
+```{r}
+nofbrf_edit <- number_of_deaths_by_risk_factor %>%
+ filter(!(Code %in% c("AUT", "BMU", "CUB", "ECU", "TUR", "URY", "UZB", 
+"VUT"))) %>%
+ filter(Year >= 2000L & Year <= 2017L)
+
+nofbrf_edit
+
+```
+
+Viz
+```{r}
+p <- ggplot(nofbrf_edit) +
+  aes(x = `Secondhand smoke`, fill = Code) +
+  geom_histogram(bins = 30L) +
+  scale_fill_hue(direction = 1) +
+  theme_minimal()
+
+p
+```
+
+Interactive
+```{r}
+ggplotly(p)
+```
+
